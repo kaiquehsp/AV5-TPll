@@ -12,7 +12,7 @@ Desenvolvido como evolução do sistema CLI (AV3 → AV4 → AV5), agora com int
 | Linguagem     | TypeScript                        |
 | Frontend      | React + Vite + Material UI        |
 | Backend       | Node.js + Express                 |
-| ORM           | Prisma 7                          |
+| ORM           | Prisma 6                          |
 | Banco de Dados| SQLite (`dev.db`)                 |
 | Padrão de Projeto | Builder (acomodações)         |
 
@@ -33,7 +33,6 @@ AV4-TPll/
 │   │   ├── lib/
 │   │   │   └── prisma.ts       # Instância do PrismaClient
 │   │   └── server.ts           # Ponto de entrada da API
-│   ├── prisma.config.ts
 │   └── package.json
 │
 └── frontend/
@@ -65,6 +64,7 @@ AV4-TPll/
 
 - Node.js 18+ instalado
 - npm instalado
+- O arquivo `.env` **não está no repositório** (ver passo de configuração abaixo)
 
 ---
 
@@ -77,15 +77,22 @@ cd backend
 # Instale as dependências
 npm install
 
-# Crie o banco de dados e rode as migrações
-npx prisma migrate dev --name init
+# Crie o arquivo de variáveis de ambiente (.env)
+# Windows (PowerShell):
+New-Item .env -Value 'DATABASE_URL="file:./dev.db"'
+# Linux/Mac:
+echo 'DATABASE_URL="file:./dev.db"' > .env
 
 # Gere o Prisma Client
 npx prisma generate
 
+# Crie o banco de dados e rode as migrações
+npx prisma migrate dev --name init
+
 # Inicie o servidor
 npm run dev
 ```
+
 
 O servidor estará rodando em: `http://localhost:3000`
 
