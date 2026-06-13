@@ -1,0 +1,77 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+
+model Cliente {
+  id             String       @id @default(uuid())
+  nome           String
+  nomeSocial     String?
+  dataNascimento DateTime
+  dataCadastro   DateTime     @default(now())
+  
+  documentos     Documento[]
+  endereco       Endereco?
+  hospedagens    Hospedagem[]
+  telefones      Telefone[]
+}
+
+model Documento {
+  id            String   @id @default(uuid())
+  tipo          String   
+  numero        String   @unique
+  dataExpedicao DateTime @default(now())
+  
+  clienteId     String
+  cliente       Cliente  @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+}
+
+model Endereco {
+  id           String  @id @default(uuid())
+  rua          String
+  bairro       String
+  cidade       String
+  estado       String
+  pais         String
+  codigoPostal String
+  
+  clienteId    String  @unique
+  cliente      Cliente @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+}
+
+model Acomodacao {
+  id             String       @id @default(uuid())
+  nomeAcomadacao String       @unique
+  camaCasal      Int
+  camaSolteiro   Int
+  suite          Int
+  climatizacao   Boolean
+  garagem        Int
+  
+  hospedagens    Hospedagem[]
+}
+
+model Hospedagem {
+  id           String     @id @default(uuid())
+  dataEntrada  DateTime   @default(now())
+  dataSaida    DateTime?
+  
+  clienteId    String
+  acomodacaoId String
+  
+  cliente      Cliente    @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+  acomodacao   Acomodacao @relation(fields: [acomodacaoId], references: [id], onDelete: Cascade)
+}
+
+model Telefone {
+  id        String  @id @default(uuid())
+  ddd       String
+  numero    String
+
+  clienteId String
+  cliente   Cliente @relation(fields: [clienteId], references: [id], onDelete: Cascade)
+}
